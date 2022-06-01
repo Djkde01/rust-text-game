@@ -1,4 +1,5 @@
 use csv::{ReaderBuilder, StringRecord};
+use std::collections::HashMap;
 use std::fs;
 
 const FILE_NAME: &str = "history.csv";
@@ -25,7 +26,7 @@ impl HistoryDataFormat {
 }
 
 fn main() {
-    let mut history_data: Vec<HistoryDataFormat> = Vec::new();
+    let mut history_data: HashMap<String, HistoryDataFormat> = HashMap::new();
     let contents = fs::read_to_string(FILE_NAME).unwrap();
 
     let mut rdr = ReaderBuilder::new()
@@ -36,7 +37,7 @@ fn main() {
     for result in rdr.records() {
         let result = result.unwrap();
         let data = HistoryDataFormat::new(result);
-        history_data.push(data);
+        history_data.insert(data.tag.clone(), data);
     }
 
     println!("{:?}", history_data);
