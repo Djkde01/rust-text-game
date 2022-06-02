@@ -58,5 +58,39 @@ fn main() {
         }
     }
 
+    loop {
+        println!("Tienes {} puntos de salud", health);
+
+        if let Some(data) = history_data.get(&current_tag) {
+            println!("{}", data.text);
+
+            if data.options.len() > 0 {
+                println!("Opciones:");
+                for (index, option) in data.options.iter().enumerate() {
+                    println!("{} - {}", index, option.text);
+                }
+
+                let mut option_index = String::new();
+                std::io::stdin().read_line(&mut option_index).unwrap();
+                let option_index = option_index.trim().parse::<usize>().unwrap_or(99);
+
+                if option_index < data.options.len() {
+                    current_tag = data.options[option_index].tag.clone();
+                } else {
+                    println!("Opcion no valida");
+                }
+
+                health += data.health;
+            } else {
+                println!("No hay opciones");
+                break;
+            }
+            if health <= 0 {
+                println!("Has muerto");
+                break;
+            }
+        }
+    }
+
     println!("{:?}", history_data);
 }
